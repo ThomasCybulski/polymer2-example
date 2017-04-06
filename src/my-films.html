@@ -1,0 +1,93 @@
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-films">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+        padding: 10px;
+      }
+
+      paper-progress.blue {
+        --paper-progress-active-color: var(--paper-light-blue-500);
+        --paper-progress-secondary-color: var(--paper-light-blue-100);
+      }
+
+      paper-progress {
+        width: 100%;
+      }
+
+      paper-card {
+        margin-bottom: 2%;
+      }
+    </style>
+
+    <dom-if if="{{loading}}">
+      <template>
+        <paper-progress value="10" indeterminate class="blue"></paper-progress>
+      </template>
+    </dom-if>
+
+    <iron-ajax auto url="http://swapi.co/api/films/" handle-as="json" loading="{{loading}}" on-response="handleResponse" debounce-duration="300"></iron-ajax>
+
+    <dom-repeat items=[[_filmResponse.results]]>
+      <template>
+        <paper-card heading="[[item.title]]">
+          <div class="card-content">
+            Director: [[item.director]]<br> Opening crawl: [[item.opening_crawl]]
+          </div>
+          <div class="card-actions">
+            <div class="horizontal justified">
+              <paper-button on-tap="_openStarshipDialog">
+                <iron-icon icon="maps:local-airport"></iron-icon> Starships</paper-button>
+            </div>
+          </div>
+        </paper-card>
+      </template>
+    </dom-repeat>
+
+  </template>
+
+  <script>
+    class MyFilms extends Polymer.Element {
+      static get is() {
+        return 'my-films';
+      }
+
+      static get properties() {
+        return {
+          _filmResponse: {
+            type: String
+          },
+          loading: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      handleResponse(event) {
+        this._filmResponse = event.detail.__data.response;
+      }
+
+      _openStarshipDialog(event) {
+        this.dispatchEvent(new CustomEvent('open-starship', {
+          detail: {
+            starships: event.model.__data.item.starships
+          }
+        }));
+
+      }
+    }
+
+    window.customElements.define(MyFilms.is, MyFilms);
+  </script>
+</dom-module>
