@@ -89,7 +89,7 @@
     </app-drawer-layout>
     <paper-dialog id="dialog">
       <h2>Starships</h2>
-      <p>Dialog body</p>
+      <p>[[_dialogBody]]</p>
     </paper-dialog>
   </template>
 
@@ -107,6 +107,9 @@
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
+          _dialogBody: {
+            type: String
+          }
         };
       }
 
@@ -117,6 +120,7 @@
       }
 
       _openStarshipDialog(event) {
+        this._dialogBody = event.detail.starships;
         this.$.dialog.open();
       }
 
