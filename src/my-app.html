@@ -82,7 +82,7 @@
         </app-header>
 
         <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
-          <my-films on-open-starship="_openStarshipDialog" name="films"></my-films>
+          <my-films name="films"></my-films>
         </iron-pages>
       </app-header-layout>
 
@@ -114,10 +114,6 @@
         return [
           '_routePageChanged(routeData.page)',
         ];
-      }
-
-      _openStarshipDialog(event) {
-        this.$.dialog.open();
       }
 
       _routePageChanged(page) {
